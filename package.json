@@ -1,0 +1,25 @@
+{
+  "name": "domain-tools-block",
+  "version": "1.0.0",
+  "description": "WordPress block for domain tools",
+  "main": "build/block.js",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "keywords": [
+    "wordpress",
+    "gutenberg",
+    "block"
+  ],
+  "author": "Your Name",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "babel-loader": "^9.2.1",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^5.1.4"
+  }
+}
