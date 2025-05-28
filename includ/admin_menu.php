@@ -53,6 +53,8 @@ function domain_tools_settings_page()
                 <div class="domain-tool-box"><h2>🌐 TXT Records</h2><p>Displays all TXT records.</p><code>[txt_checker]</code></div>
                 <div class="domain-tool-box"><h2>🔍 IP & Geo Lookup</h2><p>Geolocation and ISP data based on IP (with map).</p><code>[ip_checker]</code></div>
                 <div class="domain-tool-box"><h2>🔐 SSL Certificate Checker</h2><p>Fetches SSL expiration and certificate info.</p><code>[ssl_checker]</code></div>
+                <div class="domain-tool-box"><h2>📧 Email Deliverability Checker</h2><code>[email_deliverability_checker]</code></div>
+                <div class="domain-tool-box"><h2>📧 Blacklist Check Tool</h2><code>[blacklist_checker]</code></div>
             </div>
         </div>
 

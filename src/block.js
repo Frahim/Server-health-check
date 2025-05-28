@@ -28,7 +28,8 @@ registerBlockType('domain-tools/shortcode-selector', {
             a_record_checker: 'A Record Checker',
             txt_checker: 'TXT Checker',
             ip_checker: 'IP Checker',
-            ssl_checker: 'SSL Checker'
+            ssl_checker: 'SSL Checker',
+            email_deliverability_checker: 'Email Deliverability'
         };
 
         // Always fetch preview when shortcodeKey changes or is first set

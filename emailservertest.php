@@ -45,7 +45,8 @@ include plugin_dir_path(__FILE__) . 'includ/dkimShortcode.php';
 include plugin_dir_path(__FILE__) . 'includ/smtpShortcode.php';
 include plugin_dir_path(__FILE__) . 'includ/sslShortcode.php';
 include plugin_dir_path(__FILE__) . 'includ/ip_checker_shortcode.php';
-
+include plugin_dir_path(__FILE__) . 'includ/email_deliverability_checker.php';
+include plugin_dir_path(__FILE__) . 'includ/backlistShortcode.php';
 /**  FOR Block */
 // Hook to register the Gutenberg block
 add_action('init', 'domain_tools_register_block');
@@ -81,7 +82,8 @@ function domain_tools_block_render_callback($attributes) {
         'a_record_checker' => '[a_record_checker]',
         'txt_checker' => '[txt_checker]',
         'ip_checker' => '[ip_checker]',
-        'ssl_checker' => '[ssl_checker]'
+        'ssl_checker' => '[ssl_checker]',
+        'email_deliverability_checker' => '[email_deliverability_checker]'
     ];
 
     $key = isset($attributes['shortcodeKey']) ? $attributes['shortcodeKey'] : '';
@@ -112,7 +114,8 @@ function domain_tools_render_shortcode($request)
         'a_record_checker' => '[a_record_checker]',
         'txt_checker' => '[txt_checker]',
         'ip_checker' => '[ip_checker]',
-        'ssl_checker' => '[ssl_checker]'
+        'ssl_checker' => '[ssl_checker]',
+        'email_deliverability_checker' => '[email_deliverability_checker]'
     ];
     $code = sanitize_text_field($request->get_param('code'));
     if (!isset($shortcodes[$code])) {
