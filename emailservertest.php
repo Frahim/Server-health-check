@@ -83,7 +83,8 @@ function domain_tools_block_render_callback($attributes) {
         'txt_checker' => '[txt_checker]',
         'ip_checker' => '[ip_checker]',
         'ssl_checker' => '[ssl_checker]',
-        'email_deliverability_checker' => '[email_deliverability_checker]'
+        'email_deliverability_checker' => '[email_deliverability_checker]',
+        'blacklist_checker' => '[blacklist_checker]'
     ];
 
     $key = isset($attributes['shortcodeKey']) ? $attributes['shortcodeKey'] : '';
@@ -115,7 +116,8 @@ function domain_tools_render_shortcode($request)
         'txt_checker' => '[txt_checker]',
         'ip_checker' => '[ip_checker]',
         'ssl_checker' => '[ssl_checker]',
-        'email_deliverability_checker' => '[email_deliverability_checker]'
+        'email_deliverability_checker' => '[email_deliverability_checker]',
+        'blacklist_checker' => '[blacklist_checker]'
     ];
     $code = sanitize_text_field($request->get_param('code'));
     if (!isset($shortcodes[$code])) {
