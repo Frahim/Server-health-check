@@ -11,7 +11,7 @@ registerBlockType('domain-tools/shortcode-selector', {
 
     attributes: {
         shortcodeKey: { type: 'string', default: ' empty_checker' },
-        renderedHtml: { type: 'string', default: '' }
+        renderedHtml: { type: 'string', default: '' },
     },
 
     edit({ attributes, setAttributes }) {

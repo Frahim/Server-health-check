@@ -71,3 +71,14 @@
 .innerwrapper table tr{
 text-align: left !important;
 }
+
+.formwrapper h2 {
+    margin-top: 0;
+    font-weight: 600;
+}
+.formwrapper {
+    padding: 40px !important;
+    FONT-VARIANT: JIS83;
+    box-shadow: 0 0 6px #dddddd;
+    border-radius: 25px;
+}

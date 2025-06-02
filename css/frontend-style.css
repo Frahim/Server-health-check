@@ -17,24 +17,23 @@
   width: 100%;
   position: relative;
   display: flex;
+  gap: 10px;
 }
 
 .searchTerm {
-  width: 100%;
-  border: 3px solid #00B4CC;
-  border-right: none;
-  padding: 5px;
-  height: 20px;
-  border-radius: 5px 0 0 5px;
-  outline: none;
-  color: #9DBFAF;
+    width: 100%;
+    border: 1px solid royalblue;
+    padding: 15px;
+    border-radius: 5px;
+    outline: none;
+    color: #9DBFAF;
 }
 
 .searchTerm:focus {
   color: #00B4CC;
 }
 
-.searchButton:hover {
+/* .searchButton:hover {
   border: 1px solid #017989;
   background: #017989;
   text-align: center;
@@ -52,11 +51,143 @@
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
-}
+} */
 
 /*Resize the wrap to see the search bar change!*/
 
 
-.innerwrapper table tr{
-text-align: left !important;
+.innerwrapper table tr {
+  text-align: left !important;
+}
+
+.formwrapper h2 {
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.formwrapper {
+  padding: 40px !important;
+  FONT-VARIANT: JIS83;
+  box-shadow: 0 0 6px #dddddd;
+  border-radius: 25px;
+}
+
+.twenty-one {
+    background: blue;
+    color: #fff;
+    border: 1px solid royalblue;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    transition: color 400ms;
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    padding: 20px;
+    max-width: 150px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.twenty-one::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: royalblue;
+  z-index: -1;
+  transition: transform 400ms ease-out;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.twenty-one:hover::before {
+  transform: scaleX(1);
+}
+
+.twenty-one:hover {
+  color: #fff;
+}
+
+
+/* Basic styles for the popup */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex; /* Ensures the popup content is centered */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    z-index: 1000;
+    max-width: 100% !important;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 30px; /* Padding inside the content box */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 90%; /* Take up 90% of the screen width */
+    max-width: 700px; /* But not more than 500px */
+    box-sizing: border-box; /* Include padding in the width calculation */
+
+    /* Center the *text and inline-block elements* directly within popup-content */
+    text-align: center; /* This will center h3, and if ul is inline-block, it too */
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #888;
+}
+
+.close-button:hover {
+    color: #555;
+}
+
+/* Styles for the result within the popup */
+.resultwrapper {
+    /* This div holds the h3 and ul. Its width will be 100% of popup-content (minus padding). */
+    width: 100%;
+    /* No need for text-align: center here if it's on popup-content, or use it here instead. */
+    /* Let's be explicit and apply it to popup-content for all its immediate text/inline children. */
+}
+
+.resultwrapper .innerwrapper {
+    /* This is the div immediately wrapping the h3 and ul */
+    width: 100%; /* Ensure it takes full width within resultwrapper */
+}
+
+
+.resultwrapper h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    /* Since text-align: center is on popup-content, this h3 will be centered */
+}
+
+
+
+.resultwrapper strong {
+    color: #333;
+}
+
+.p10 {
+    padding: 10px;
+}
+
+
+.adds {
+    border-top: 1px solid;
 }
