@@ -4,7 +4,7 @@
 }
 
 .innerwrapper {
-  padding: 15px;
+
   border-radius: 10px;
 }
 
@@ -57,7 +57,9 @@
 
 
 .innerwrapper table tr {
-  text-align: left !important;
+  text-align: center !important;
+  border-bottom: 1px solid #dbdbdb;
+    font-size: 16px;
 }
 
 .formwrapper h2 {
@@ -135,12 +137,12 @@
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     position: relative;
-    width: 90%; /* Take up 90% of the screen width */
-    max-width: 700px; /* But not more than 500px */
+    width: 700px;
+    max-width: 90%;
     box-sizing: border-box; /* Include padding in the width calculation */
-
-    /* Center the *text and inline-block elements* directly within popup-content */
-    text-align: center; /* This will center h3, and if ul is inline-block, it too */
+    max-height: 95vh;
+    overflow-y: auto;
+   
 }
 
 .close-button {
@@ -164,9 +166,9 @@
     /* Let's be explicit and apply it to popup-content for all its immediate text/inline children. */
 }
 
-.resultwrapper .innerwrapper {
-    /* This is the div immediately wrapping the h3 and ul */
-    width: 100%; /* Ensure it takes full width within resultwrapper */
+.resultwrapper .innerwrapper {   
+    width: 100%;
+    font-size: 16px;
 }
 
 
@@ -174,11 +176,22 @@
     margin-top: 0;
     margin-bottom: 15px;
     color: #333;
-    /* Since text-align: center is on popup-content, this h3 will be centered */
+   font-size: 30px;
 }
 
-
-
+.resultwrapper  ul li.item-wrwpper {
+    border-left: 3px solid #00b4cc;
+    padding: 15px !important;
+    box-shadow: inset 0px 0px 10px #e3e3e3;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 26px;
+    margin-bottom: 15px;;
+}
+li.item-wrwpper li span {
+    color: #017989;
+}
 .resultwrapper strong {
     color: #333;
 }
@@ -189,5 +202,7 @@
 
 
 .adds {
-    border-top: 1px solid;
+    margin-top: 10px;
+    border: 1px solid #e1e1e1;
+    padding: 5px;
 }

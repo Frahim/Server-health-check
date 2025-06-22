@@ -20,23 +20,33 @@ function handle_mx_ajax()
         wp_die();
     }
 
-    $mxHost = $mxRecords[0]['target'];
-    $ip = gethostbyname($mxHost);
     $testDuration = round((microtime(true) - $startTime) * 1000); // in ms
 
-    $ipInfoJson = file_get_contents("http://ip-api.com/json/{$ip}?fields=status,message,as,country,org,query");
-    $ipInfo = json_decode($ipInfoJson, true);
+    $mxInfoList = [];
+
+    foreach ($mxRecords as $record) {
+        $mxHost = $record['target'];
+        $priority = $record['pri'];
+        $ip = gethostbyname($mxHost);
+
+        $ipInfoJson = @file_get_contents("http://ip-api.com/json/{$ip}?fields=status,message,as,country,org,query");
+        $ipInfo = json_decode($ipInfoJson, true);
+
+        $mxInfoList[] = [
+            "priority" => $priority,
+            "mx_record" => $mxHost,
+            "ip" => $ip,
+            "status" => $ipInfo['status'] === 'success' ? "Success" : "Failed",
+            "as_number" => $ipInfo['as'] ?? null,
+            "organization" => $ipInfo['org'] ?? null,
+            "country" => $ipInfo['country'] ?? null,
+        ];
+    }
 
     $response = [
-        "mx_record" => $mxHost,
-        "ip" => $ip,
-        "status" => $ipInfo['status'] === 'success' ? "Success" : "Failed",
-        "test_duration_ms" => $testDuration,
-        "as_number" => $ipInfo['as'] ?? null,
-        "organization" => $ipInfo['org'] ?? null,
         "domain" => parse_url("http://$domain", PHP_URL_HOST),
-        "country" => $ipInfo['country'] ?? null,
-
+        "test_duration_ms" => $testDuration,
+        "records" => $mxInfoList
     ];
 
     echo json_encode($response);
@@ -49,77 +59,89 @@ function mx_checker_shortcode()
     ob_start();
 ?>
     <form id="mx-check-form" class="formwrapper">
-    <h2 class="title">MX Record Checker</h2>
-    <p>Enter your Domain Name</p>
-    <div class="search">
-        <input type="text" id="mx-domain" class="searchTerm" placeholder="e.g., example.com">
-        <button id="showPopupBtn" type="submit" class="searchButton twenty-one">
-            Check
-        </button>
-    </div>
-</form>
+        <h2 class="title">MX Record Checker</h2>
+        <p>Enter your Domain Name</p>
+        <div class="search">
+            <input type="text" id="mx-domain" class="searchTerm" placeholder="e.g., example.com">
+            <button id="showPopupBtn" type="submit" class="searchButton twenty-one">
+                Check
+            </button>
+        </div>
+    </form>
 
-<div id="mx-result-popup" class="popup-overlay" style="display: none;">
-    <div class="popup-content">
-        <span class="close-button" id="closePopupBtn">&times;</span>
-        <div id="mx-result" class="resultwrapper" style="margin-top: 20px;">
+    <div id="mx-result-popup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <span class="close-button" id="closePopupBtn">&times;</span>
+            <div id="mx-result" class="resultwrapper" style="margin-top: 20px;">
             </div>
+             <div class="adds">
+               <h3> Advertise display here</h3>
+            </div>
+        </div>
     </div>
-</div>
 
 
-<script>
-    document.getElementById('mx-check-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const domain = document.getElementById('mx-domain').value;
-        const resultBox = document.getElementById('mx-result');
-        const popup = document.getElementById('mx-result-popup');
+    <script>
+        document.getElementById('mx-check-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const domain = document.getElementById('mx-domain').value;
+            const resultBox = document.getElementById('mx-result');
+            const popup = document.getElementById('mx-result-popup');
 
-        // Show the popup and set initial checking message
-        popup.style.display = 'flex';
-        resultBox.innerHTML = '<div class="p10">Checking...</div>';
+            // Show the popup and set initial checking message
+            popup.style.display = 'flex';
+            resultBox.innerHTML = '<div class="p10">Checking...</div>';
 
-        fetch('<?php echo admin_url('admin-ajax.php'); ?>?action=check_mx_record&domain=' + encodeURIComponent(domain))
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    resultBox.innerHTML = `<div class="p10" style="color: red;">Error: ${data.error}</div>`;
-                    return;
-                }
+            fetch('<?php echo admin_url('admin-ajax.php'); ?>?action=check_mx_record&domain=' + encodeURIComponent(domain))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        resultBox.innerHTML = `<div class="p10" style="color: red;">Error: ${data.error}</div>`;
+                        return;
+                    }
 
-                resultBox.innerHTML = `
-                <div class="innerwrapper">      
-                    <h3 style="margin-top: 0;">MX Record Info for <strong>${data.domain}</strong></h3>
-                    <ul style="list-style: none; padding: 0;">
-                        <li><strong>MX Record:</strong> ${data.mx_record}</li>
-                        <li><strong>IP Address:</strong> ${data.ip}</li>
-                        <li><strong>Status:</strong> ${data.status}</li>
-                        <li><strong>Response Time:</strong> ${data.test_duration_ms} ms</li>
-                        <li><strong>AS Number:</strong> ${data.as_number || 'N/A'}</li>
-                        <li><strong>Organization:</strong> ${data.organization || 'N/A'}</li>
-                        <li><strong>Country:</strong> ${data.country || 'N/A'}</li>
-                    </ul>
-                  
-                </div>
-            `;
-            })
-            .catch(error => {
-                resultBox.innerHTML = `<div class="p10" style="color: red;">Error: ${error}</div>`;
-            });
-    });
+                    let output = `
+        <div class="innerwrapper">
+            <h3 style="margin-top: 0;">MX Records for <strong>${data.domain}</strong></h3>            
+            <ul style="list-style: none; padding: 0;">
+    `;
 
-    // Close popup functionality
-    document.getElementById('closePopupBtn').addEventListener('click', function() {
-        document.getElementById('mx-result-popup').style.display = 'none';
-    });
+                    data.records.forEach(record => {
+                        output += `
+            <li class="item-wrwpper">
+            <ul>
+              <li>Priority: <span>${record.priority}</span><br/></li>
+              <li>MX Record: <span>${record.mx_record}</span><br/></li>
+              <li>IP Address: <span>${record.ip}</span><br/></li>
+              <li> Status: <span>${record.status}</span><br/></li>
+              <li>AS Number: <span>${record.as_number || 'N/A'}</span><br/></li>
+              <li>Organization: <span>${record.organization || 'N/A'}</span><br/></li>
+              <li>Country: <span>${record.country || 'N/A'}</span><br/></li>
+                     </ul> </li>
+        `;
+                    });
 
-    // Close popup when clicking outside of the content
-    document.getElementById('mx-result-popup').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.style.display = 'none';
-        }
-    });
-</script>
+                    output += `</ul></div>`;
+                    resultBox.innerHTML = output;
+                })
+
+                .catch(error => {
+                    resultBox.innerHTML = `<div class="p10" style="color: red;">Error: ${error}</div>`;
+                });
+        });
+
+        // Close popup functionality
+        document.getElementById('closePopupBtn').addEventListener('click', function() {
+            document.getElementById('mx-result-popup').style.display = 'none';
+        });
+
+        // Close popup when clicking outside of the content
+        document.getElementById('mx-result-popup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+    </script>
 <?php
     return ob_get_clean();
 }

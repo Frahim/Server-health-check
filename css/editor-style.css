@@ -1,45 +1,39 @@
-.shortcode-preview {
-    background: #fff;
-    border: 1px solid #ddd;
-    padding: 16px;
-    margin-top: 12px;
+.resultwrwpper {
+  background: #eef;
+  border-radius: 6px;
 }
 
-
-
-.shortcode-preview-block h4 {
-    margin: 0 0 10px;
-    font-size: 16px;
-}
-.shortcode-preview-block .description {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 10px;
+.innerwrapper {
+  padding: 15px 0;
+  border-radius: 10px;
 }
 
+.p10 {
+  padding: 10px;
+}
 
+/* test */
 .search {
   width: 100%;
   position: relative;
   display: flex;
+  gap: 10px;
 }
 
 .searchTerm {
     width: 100%;
-    border: 3px solid #00B4CC !important;
-    border-right: none;
-    padding: 5px !important;
-    height: 36px;
-    border-radius: 5px 0 0 5px !important;
+    border: 1px solid royalblue;
+    padding: 15px;
+    border-radius: 5px;
     outline: none;
-    color: #9DBFAF !important;
+    color: #9DBFAF;
 }
 
 .searchTerm:focus {
   color: #00B4CC;
 }
 
-.searchButton:hover {
+/* .searchButton:hover {
   border: 1px solid #017989;
   background: #017989;
   text-align: center;
@@ -55,30 +49,156 @@
   color: #423c3c;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-}
+} */
 
 /*Resize the wrap to see the search bar change!*/
-.wrap {
-  width: 30%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
 
-.innerwrapper table tr{
-text-align: left !important;
+
+.innerwrapper table tr {
+  text-align: left !important;
 }
 
 .formwrapper h2 {
-    margin-top: 0;
-    font-weight: 600;
+  margin-top: 0;
+  font-weight: 600;
 }
+
 .formwrapper {
-    padding: 40px !important;
-    FONT-VARIANT: JIS83;
-    box-shadow: 0 0 6px #dddddd;
-    border-radius: 25px;
+  padding: 40px !important;
+  FONT-VARIANT: JIS83;
+  box-shadow: 0 0 6px #dddddd;
+  border-radius: 25px;
+}
+
+.twenty-one {
+    background: blue;
+    color: #fff;
+    border: 1px solid royalblue;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    transition: color 400ms;
+    display: block;
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+    padding: 20px;
+    max-width: 150px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.twenty-one::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: royalblue;
+  z-index: -1;
+  transition: transform 400ms ease-out;
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.twenty-one:hover::before {
+  transform: scaleX(1);
+}
+
+.twenty-one:hover {
+  color: #fff;
+}
+
+
+/* Basic styles for the popup */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex; /* Ensures the popup content is centered */
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    z-index: 1000;
+    max-width: 100% !important;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 30px; /* Padding inside the content box */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    width: 700px;
+    max-width: 90%;
+    box-sizing: border-box; /* Include padding in the width calculation */
+    max-height: 95vh;
+    overflow-y: auto;
+   
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #888;
+}
+
+.close-button:hover {
+    color: #555;
+}
+
+/* Styles for the result within the popup */
+.resultwrapper {
+    /* This div holds the h3 and ul. Its width will be 100% of popup-content (minus padding). */
+    width: 100%;
+    /* No need for text-align: center here if it's on popup-content, or use it here instead. */
+    /* Let's be explicit and apply it to popup-content for all its immediate text/inline children. */
+}
+
+.resultwrapper .innerwrapper {  
+    width: 100%; 
+    font-size: 16px;
+}
+
+
+.resultwrapper h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+   font-size: 30px;
+}
+
+.resultwrapper  ul li.item-wrwpper {
+    border-left: 3px solid #00b4cc;
+    padding: 15px !important;
+    box-shadow: inset 0px 0px 10px #e3e3e3;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 26px;
+    margin-bottom: 15px;;
+}
+li.item-wrwpper li span {
+    color: #017989;
+}
+.resultwrapper strong {
+    color: #333;
+}
+
+.p10 {
+    padding: 10px;
+}
+
+
+.adds {
+    border-top: 1px solid;
 }

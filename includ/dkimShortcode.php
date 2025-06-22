@@ -38,15 +38,28 @@ function handle_dkim_ajax()
 function dkim_record_checker_shortcode()
 {
     ob_start(); ?>
-    <form id="dkim-check-form">
-        <div class="search">
-            <input type="text" id="dkim-selector" class="searchTerm" placeholder="Selector (e.g., default)" required>
+ <form id="dkim-check-form" class="formwrapper">
+        <h2 class="title">DKIM Record Checker</h2>        
+        <div class="search">           
+             <input type="text" id="dkim-selector" class="searchTerm" placeholder="Selector (e.g., default)" required>
             <input type="text" id="dkim-domain" class="searchTerm" placeholder="Domain (e.g., example.com)" required>
-            <button type="submit" class="searchButton">Check DKIM</button>
+            <button id="showPopupBtn" type="submit" class="searchButton twenty-one">
+                Check
+            </button>
         </div>
-
     </form>
-    <div id="dkim-result" class="resultwrwpper" style="margin-top: 20px;"></div>
+
+    <div id="dkim-result-popup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <span class="close-button" id="closePopupBtn">&times;</span>
+            <div id="dkim-result" class="resultwrapper" style="margin-top: 20px;"></div>
+            <div class="adds">
+               <h3> Advertise display here</h3>
+            </div>
+        </div>
+    </div>
+
+    
 
     <script>
         document.getElementById('dkim-check-form').addEventListener('submit', function(e) {
@@ -54,6 +67,9 @@ function dkim_record_checker_shortcode()
             const selector = document.getElementById('dkim-selector').value;
             const domain = document.getElementById('dkim-domain').value;
             const resultBox = document.getElementById('dkim-result');
+             const popup = document.getElementById('dkim-result-popup');
+            // Show the popup and set initial checking message
+            popup.style.display = 'flex';
             resultBox.innerHTML = 'Checking...';
 
             fetch('<?php echo admin_url('admin-ajax.php'); ?>?action=check_dkim_record&selector=' + encodeURIComponent(selector) + '&domain=' + encodeURIComponent(domain))
@@ -63,7 +79,8 @@ function dkim_record_checker_shortcode()
                         resultBox.innerHTML = `<div style="color:red;">Error: ${data.error}</div>`;
                     } else if (data.record) {
                         resultBox.innerHTML = `<div class="innerwrapper">
-                        <strong>DKIM Record:</strong><br><code style="word-break:break-all;">${data.record}</code>
+                        <h3 style="margin-top: 0;">DKIM Record for <strong>${domain}</strong></h3> 
+                        <div class="dkim-result"><code style="word-break:break-all;">${data.record}</code></div>
                     </div>`;
                     } else {
                         resultBox.innerHTML = 'No DKIM record found.';
@@ -72,6 +89,18 @@ function dkim_record_checker_shortcode()
                 .catch(err => {
                     resultBox.innerHTML = 'Error: ' + err;
                 });
+        });
+
+         // Close popup functionality
+        document.getElementById('closePopupBtn').addEventListener('click', function() {
+            document.getElementById('dkim-result-popup').style.display = 'none';
+        });
+
+        // Close popup when clicking outside of the content
+        document.getElementById('dkim-result-popup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
         });
     </script>
 <?php
