@@ -44,15 +44,17 @@ function txt_checker_shortcode()
             <span class="close-button" id="closePopupBtn">&times;</span>
             <div id="txt-result" class="resultwrapper" style="margin-top: 20px;"></div>
             <div class="adds googleaddscode">
-<div class="ad-wrapper" style="margin-top: 20px;">
-        <ins class="adsbygoogle"
-            style="display:block; text-align:center;"
-            data-ad-layout="in-article"
-            data-ad-format="fluid"
-            data-ad-client="ca-pub-1234567890123456"
-            data-ad-slot="9876543210"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
+                <div class="ad-wrapper" style="margin-top: 20px;">
+                    <ins class="adsbygoogle"
+                        style="display:block; text-align:center;"
+                        data-ad-layout="in-article"
+                        data-ad-format="fluid"
+                        data-ad-client="ca-pub-1234567890123456"
+                        data-ad-slot="9876543210"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
             </div>
         </div>
     </div>

@@ -74,8 +74,8 @@ function mx_checker_shortcode()
             <span class="close-button" id="closePopupBtn">&times;</span>
             <div id="mx-result" class="resultwrapper" style="margin-top: 20px;">
             </div>
-             <div class="adds">
-               <h3> Advertise display here</h3>
+            <div class="adds">
+                <h3> Advertise display here</h3>
             </div>
         </div>
     </div>
