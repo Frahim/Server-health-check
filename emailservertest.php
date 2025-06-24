@@ -47,6 +47,10 @@ include plugin_dir_path(__FILE__) . 'includ/sslShortcode.php';
 include plugin_dir_path(__FILE__) . 'includ/ip_checker_shortcode.php';
 include plugin_dir_path(__FILE__) . 'includ/email_deliverability_checker.php';
 include plugin_dir_path(__FILE__) . 'includ/backlistShortcode.php';
+
+
+
+
 /**  FOR Block */
 // Hook to register the Gutenberg block
 add_action('init', 'domain_tools_register_block');
@@ -72,7 +76,8 @@ function domain_tools_register_block()
 
 
 // Render callback for the dynamic block (this will run on the frontend)
-function domain_tools_block_render_callback($attributes) {
+function domain_tools_block_render_callback($attributes)
+{
     $shortcodes = [
         'spf_checker' => '[spf_checker]',
         'mx_checker' => '[mx_checker]',
@@ -150,4 +155,170 @@ function domain_tools_output_custom_styles()
         }
     </style>
 <?php
+}
+
+
+/**  Page template  */
+add_filter('theme_page_templates', 'cpt_add_new_template');
+add_filter('template_include', 'cpt_load_custom_template');
+//add_filter('wp_insert_post_data', 'cpt_force_template_slug', 10, 2);
+
+define('CPT_TEMPLATE_PATH', plugin_dir_path(__FILE__) . 'templates/');
+
+// Add template to dropdown
+function cpt_add_new_template($templates)
+{
+    $templates['server-helth-template.php'] = 'My Custom Template';
+    $templates['template-dns-checker.php'] = 'Check Template';
+    return $templates;
+}
+
+// Load the template from plugin
+function cpt_load_custom_template($template)
+{
+    if (is_page()) {
+        $current_template = get_page_template_slug(get_queried_object_id());
+        if ($current_template == 'server-helth-template.php') {
+            $plugin_template = CPT_TEMPLATE_PATH . 'server-helth-template.php';
+            if (file_exists($plugin_template)) {
+                return $plugin_template;
+            }
+        }
+         if ($current_template == 'template-dns-checker.php') {
+            $plugin_template = CPT_TEMPLATE_PATH . 'template-dns-checker.php';
+            if (file_exists($plugin_template)) {
+                return $plugin_template;
+            }
+        }
+    }
+    return $template;
+}
+
+
+
+
+
+add_action('wp_enqueue_scripts', 'cpt_enqueue_jquery');
+function cpt_enqueue_jquery()
+{
+    // Check if jQuery is already registered
+    if (!wp_script_is('jquery', 'enqueued')) {
+        wp_enqueue_script('jquery');
+    }
+
+    
+}
+
+// === A Record ===
+add_action('wp_ajax_check_a_record', 'tmhandletm_a_record_ajax');
+add_action('wp_ajax_nopriv_check_a_record', 'tmhandletm_a_record_ajax');
+function tmhandletm_a_record_ajax() {
+    $domain = sanitize_text_field($_GET['domain']);
+    if (!$domain) wp_send_json_error('Domain is required');
+    $records = dns_get_record($domain, DNS_A);
+    if (!$records) wp_send_json_error('Failed to retrieve A records');
+    wp_send_json($records);
+}
+
+// === MX Record ===
+add_action('wp_ajax_check_mx_record', 'tmhandletm_mx_ajax');
+add_action('wp_ajax_nopriv_check_mx_record', 'tmhandletm_mx_ajax');
+function tmhandletm_mx_ajax() {
+    $domain = sanitize_text_field($_GET['domain']);
+    if (!$domain) wp_send_json_error('Domain is required');
+    $records = dns_get_record($domain, DNS_MX);
+    if (!$records) wp_send_json_error('Failed to retrieve MX records');
+    $enhanced = [];
+    foreach ($records as $r) {
+        $ip = gethostbyname($r['target']);
+        $info = json_decode(file_get_contents("http://ip-api.com/json/{$ip}?fields=status,country,org,as,query"), true);
+        $enhanced[] = array_merge($r, ['ip' => $ip, 'geo' => $info]);
+    }
+    wp_send_json($enhanced);
+}
+
+// === SPF Record (TXT lookup) ===
+add_action('wp_ajax_check_spf_record', 'tmhandletm_spf_ajax');
+add_action('wp_ajax_nopriv_check_spf_record', 'tmhandletm_spf_ajax');
+function tmhandletm_spf_ajax() {
+    $domain = sanitize_text_field($_GET['domain']);
+    if (!$domain) wp_send_json_error('Domain is required');
+    $txts = dns_get_record($domain, DNS_TXT);
+    $spf = array_filter($txts, fn($r) => str_starts_with($r['txt'], 'v=spf1'));
+    wp_send_json(array_values($spf));
+}
+
+// === IP Info (of domain) ===
+add_action('wp_ajax_check_ip_record', 'tmhandletm_ip_ajax');
+add_action('wp_ajax_nopriv_check_ip_record', 'tmhandletm_ip_ajax');
+function tmhandletm_ip_ajax() {
+    $domain = sanitize_text_field($_GET['domain']);
+    if (!$domain) wp_send_json_error('Domain is required');
+    $ip = gethostbyname($domain);
+    $info = json_decode(file_get_contents("http://ip-api.com/json/{$ip}?fields=status,country,org,as,query"), true);
+    wp_send_json(['ip' => $ip, 'geo' => $info]);
+}
+
+
+add_action('wp_ajax_check_txt_record','handletm_txt_ajax');
+add_action('wp_ajax_nopriv_check_txt_record','handletm_txt_ajax');
+function handletm_txt_ajax() {
+    header('Content-Type: application/json');
+    $domain = sanitize_text_field($_GET['domain'] ?? '');
+    $txts = dns_get_record($domain, DNS_TXT);
+    if (!$txts) echo json_encode(['records'=>[]]);
+    else echo json_encode(['records'=>array_column($txts,'txt')]);
+    wp_die();
+}
+
+add_action('wp_ajax_check_dkim_record','handletm_dkim_ajax');
+add_action('wp_ajax_nopriv_check_dkim_record','handletm_dkim_ajax');
+function handletm_dkim_ajax(){
+    header('Content-Type: application/json');
+    $record = dns_get_record("default._domainkey." . sanitize_text_field($_GET['domain']), DNS_TXT);
+    echo json_encode(['record'=> $record[0]['txt'] ?? 'Not found']);
+    wp_die();
+}
+
+add_action('wp_ajax_check_dmarc_record','handletm_dmarc_ajax');
+add_action('wp_ajax_nopriv_check_dmarc_record','handletm_dmarc_ajax');
+function handletm_dmarc_ajax(){
+    header('Content-Type: application/json');
+    $record = dns_get_record("_dmarc." . sanitize_text_field($_GET['domain']), DNS_TXT);
+    echo json_encode(['record'=> $record[0]['txt'] ?? 'Not found']);
+    wp_die();
+}
+
+add_action('wp_ajax_check_smtp_record','handletm_smtp_ajax');
+add_action('wp_ajax_nopriv_check_smtp_record','handletm_smtp_ajax');
+function handletm_smtp_ajax(){
+    header('Content-Type: application/json');
+    $mx = dns_get_record(sanitize_text_field($_GET['domain']), DNS_MX);
+    if (!$mx) echo json_encode(['error'=>'No MX record']);
+    else {
+      $host=$mx[0]['target'];
+      $conn = @fsockopen($host,25,$e,$s,5);
+      echo $conn ? json_encode(['status'=>'Reachable']) : json_encode(['error'=>'Not reachable']);
+      if ($conn) fclose($conn);
+    }
+    wp_die();
+}
+
+add_action('wp_ajax_check_ssl_record','handletm_ssl_ajax');
+add_action('wp_ajax_nopriv_check_ssl_record','handletm_ssl_ajax');
+function handletm_ssl_ajax(){
+    header('Content-Type: application/json');
+    $domain = sanitize_text_field($_GET['domain']);
+    $c = @stream_socket_client("ssl://{$domain}:443", $e, $s, 15);
+    if (!$c) echo json_encode(['error'=>'SSL connect failed']);
+    else {
+      $p = stream_context_get_params($c);
+      $cert = openssl_x509_parse($p['options']['ssl']['peer_certificate']);
+      echo json_encode([
+        'issuer'=>$cert['issuer']['CN'] ?? '',
+        'validFrom'=>date('Y-m-d',$cert['validFrom_time_t']),
+        'validTo'=>date('Y-m-d',$cert['validTo_time_t'])
+      ]);
+    }
+    wp_die();
 }
