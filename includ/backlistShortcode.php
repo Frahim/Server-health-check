@@ -1,8 +1,14 @@
 <?php
 /* ============  SHORTCODE  ============ */
-add_shortcode( 'blacklist_checker', 'render_blacklist_checker' );
+add_shortcode( 'blacklist_checker', 'render_blacklist_checker' ); 
 
-function render_blacklist_checker() {
+function render_blacklist_checker($atts = []) { 
+    $atts = shortcode_atts([
+        'img' => '',
+		'img2' => '',
+        'url' => ''
+    ], $atts);   
+
 	ob_start(); ?>
 	<form id="blc-form" class="formwrapper">
 		<h2 class="title">Blacklists Checker</h2>
@@ -18,9 +24,16 @@ function render_blacklist_checker() {
 		<div class="popup-content">
 			<span class="close-button" id="blc-close">&times;</span>
 			<div id="blc-result" class="resultwrapper" style="margin-top:20px;"></div>
-			 <div class="adds">
-               <h3> Advertise display here</h3>
-            </div>
+			<?php if (!empty($atts['img']) && !empty($atts['url'])) : ?> <!-- NEW -->
+                <div class="adds"> <!-- NEW -->
+                    <a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+					<a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img2']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+                </div> <!-- NEW -->   
+            <?php endif; ?> <!-- NEW -->
 		</div>
 	</div>
 

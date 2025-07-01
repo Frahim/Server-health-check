@@ -1,6 +1,10 @@
 <?php
-function ip_checker_shortcode()
-{
+function ip_checker_shortcode($atts = []) { 
+    $atts = shortcode_atts([
+        'img' => '',
+		'img2' => '',
+        'url' => ''
+    ], $atts);   
     ob_start(); ?>
     <form id="ip-check-form" class="formwrapper">
         <h2 class="title">IP Checker</h2>
@@ -21,9 +25,16 @@ function ip_checker_shortcode()
                     <div id="ip-result" style="margin-top: 15px;"></div>
                 </div>
             </div>
-            <div class="adds">
-                <h3>Advertise display here</h3>
-            </div>
+           <?php if (!empty($atts['img']) && !empty($atts['url'])) : ?> <!-- NEW -->
+                <div class="adds"> <!-- NEW -->
+                    <a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+					<a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img2']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+                </div> <!-- NEW -->   
+            <?php endif; ?> <!-- NEW -->
         </div>
     </div>
 

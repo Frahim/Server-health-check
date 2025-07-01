@@ -39,8 +39,13 @@ function handle_spf_ajax()
     wp_die();
 }
 
-function spf_checker_shortcode()
-{
+function spf_checker_shortcode($atts = []) { 
+    $atts = shortcode_atts([
+        'img' => '',
+		'img2' => '',
+        'url' => ''
+    ], $atts);   
+
     ob_start(); // Start output buffering
     ?>
 
@@ -59,40 +64,17 @@ function spf_checker_shortcode()
         <div class="popup-content">
             <span class="close-button" id="closeSpfPopupBtn">&times;</span>
             <div id="spf-result" class="resultwrapper" style="margin-top: 20px;"></div>
-
            
-                <?php
-                // --- Dynamic AdSense Code Injection Here ---
-                // Fetch the stored AdSense IDs for SPF Checker
-                $adsense_options = get_option('domain_tools_spf_adsense_settings', []);
-                $publisher_id = $adsense_options['publisher_id'] ?? '';
-                $ad_slot_id = $adsense_options['ad_slot_id'] ?? '';
-
-                // Only display AdSense code if IDs are configured and valid
-                if (!empty($publisher_id) && preg_match('/^ca-pub-\d{16}$/', $publisher_id) &&
-                    !empty($ad_slot_id) && preg_match('/^\d{10}$/', $ad_slot_id)) {
-                    ?>
-                     <div class="adds googleaddscode"> 
-                    <div style="text-align: center; margin: 10px auto;">
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=<?php echo esc_attr($publisher_id); ?>" crossorigin="anonymous"></script>
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="<?php echo esc_attr($publisher_id); ?>"
-                             data-ad-slot="<?php echo esc_attr($ad_slot_id); ?>"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true"></ins>
-                        <script>
-                             (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
-                    </div>
-                     </div>
-                    <?php
-                } else {
-                    // Optionally display nothing or a generic placeholder for regular users
-                    // echo '';
-                }
-                // --- END Dynamic AdSense Code ---
-                ?>
+               <?php if (!empty($atts['img']) && !empty($atts['url'])) : ?> <!-- NEW -->
+                <div class="adds"> <!-- NEW -->
+                    <a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+					<a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img2']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+                </div> <!-- NEW -->   
+            <?php endif; ?> <!-- NEW -->
            
         </div>
     </div>

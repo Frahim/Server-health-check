@@ -24,8 +24,12 @@ function handle_txt_ajax()
 }
 
 
-function txt_checker_shortcode()
-{
+function txt_checker_shortcode($atts = []) { 
+    $atts = shortcode_atts([
+        'img' => '',
+		'img2' => '',
+        'url' => ''
+    ], $atts);   
     ob_start(); ?>
 
     <form id="txt-check-form" class="formwrapper">
@@ -43,19 +47,16 @@ function txt_checker_shortcode()
         <div class="popup-content">
             <span class="close-button" id="closePopupBtn">&times;</span>
             <div id="txt-result" class="resultwrapper" style="margin-top: 20px;"></div>
-            <div class="adds googleaddscode">
-                <div class="ad-wrapper" style="margin-top: 20px;">
-                    <ins class="adsbygoogle"
-                        style="display:block; text-align:center;"
-                        data-ad-layout="in-article"
-                        data-ad-format="fluid"
-                        data-ad-client="ca-pub-1234567890123456"
-                        data-ad-slot="9876543210"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            </div>
+           <?php if (!empty($atts['img']) && !empty($atts['url'])) : ?> <!-- NEW -->
+                <div class="adds"> <!-- NEW -->
+                    <a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+					<a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img2']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+                </div> <!-- NEW -->   
+            <?php endif; ?> <!-- NEW -->
         </div>
     </div>
     </div>

@@ -1,41 +1,12 @@
 <?php
-
-add_action('wp_ajax_check_a_record', 'handle_a_record_ajax');
-add_action('wp_ajax_nopriv_check_a_record', 'handle_a_record_ajax');
-
-function handle_a_record_ajax()
+function a_record_checker_shortcode($atts = []) // <-- MODIFIED
 {
-    header('Content-Type: application/json');
+    $atts = shortcode_atts([
+        'img' => '',
+		'img2' => '',
+        'url' => ''
+    ], $atts);             
 
-    $domain = $_GET['domain'] ?? '';
-    if (empty($domain)) {
-        echo json_encode(['error' => 'Domain is required']);
-        wp_die();
-    }
-
-    $records = dns_get_record($domain, DNS_A);
-    if ($records === false || empty($records)) {
-        echo json_encode(['error' => 'Failed to retrieve A records']);
-        wp_die();
-    }
-
-    $formatted = array_map(function ($record) use ($domain) {
-        return [
-            'record' => $domain,
-            'type' => 'A',
-            'value' => $record['ip'],
-            'ttl' => $record['ttl']
-        ];
-    }, $records);
-
-    echo json_encode($formatted);
-    wp_die();
-}
-
-
-
-function a_record_checker_shortcode()
-{
     ob_start(); ?>
 
     <form id="a-record-check-form" class="formwrapper">
@@ -53,9 +24,17 @@ function a_record_checker_shortcode()
         <div class="popup-content">
             <span class="close-button" id="closePopupBtn">&times;</span>
             <div id="a-record-result" class="resultwrapper" style="margin-top: 20px;"></div>
-             <div class="adds">
-               <h3> Advertise display here</h3>
-            </div>
+            
+           <?php if (!empty($atts['img']) && !empty($atts['url'])) : ?> <!-- NEW -->
+                <div class="adds"> <!-- NEW -->
+                    <a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+					<a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img2']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+                </div> <!-- NEW -->   
+            <?php endif; ?> <!-- NEW -->
         </div>
     </div>
 
@@ -65,7 +44,6 @@ function a_record_checker_shortcode()
             const domain = document.getElementById('a-record-domain').value;
             const resultBox = document.getElementById('a-record-result');
             const popup = document.getElementById('a-result-popup');
-            // Show the popup and set initial checking message
             popup.style.display = 'flex';
             resultBox.innerHTML = '<div class="p10">Checking...</div>';
 
@@ -77,15 +55,15 @@ function a_record_checker_shortcode()
                         return;
                     }
                     let output = `<div class="innerwrapper">
-                 <h3 style="margin-top: 0;">A Records for <strong>${domain}</strong></h3> 
-                    <table style="width:100%; border-collapse: collapse;">
-                        <tr><th>Type</th><th>IP Address</th><th>TTL</th></tr>`;
+                        <h3 style="margin-top: 0;">A Records for <strong>${domain}</strong></h3> 
+                        <table style="width:100%; border-collapse: collapse;">
+                            <tr><th>Type</th><th>IP Address</th><th>TTL</th></tr>`;
                     data.forEach(item => {
                         output += `<tr>
-                        <td>${item.type}</td>
-                        <td>${item.value}</td>
-                        <td>${item.ttl}</td>
-                    </tr>`;
+                            <td>${item.type}</td>
+                            <td>${item.value}</td>
+                            <td>${item.ttl}</td>
+                        </tr>`;
                     });
                     output += '</table></div>';
                     resultBox.innerHTML = output;
@@ -95,12 +73,10 @@ function a_record_checker_shortcode()
                 });
         });
 
-        // Close popup functionality
         document.getElementById('closePopupBtn').addEventListener('click', function() {
             document.getElementById('a-result-popup').style.display = 'none';
         });
 
-        // Close popup when clicking outside of the content
         document.getElementById('a-result-popup').addEventListener('click', function(e) {
             if (e.target === this) {
                 this.style.display = 'none';

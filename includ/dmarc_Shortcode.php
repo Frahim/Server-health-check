@@ -34,8 +34,13 @@ function handle_dmarc_ajax()
 }
 
 
-function dmarc_record_checker_shortcode()
-{
+function dmarc_record_checker_shortcode($atts = []) { 
+    $atts = shortcode_atts([
+        'img' => '',
+		'img2' => '',
+        'url' => ''
+    ], $atts);   
+
     ob_start(); ?>
      <form id="dmarc-check-form" class="formwrapper">
         <h2 class="title">DMARC Record Checker</h2>
@@ -52,9 +57,16 @@ function dmarc_record_checker_shortcode()
         <div class="popup-content">
             <span class="close-button" id="closePopupBtn">&times;</span>
              <div id="dmarc-result" class="resultwrapper" style="margin-top: 20px;"></div>
-             <div class="adds">
-               <h3> Advertise display here</h3>
-            </div>
+             <?php if (!empty($atts['img']) && !empty($atts['url'])) : ?> <!-- NEW -->
+                <div class="adds"> <!-- NEW -->
+                    <a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+					<a href="<?php echo esc_url($atts['url']); ?>" target="_blank"> <!-- NEW -->
+                        <img class="addimage" src="<?php echo esc_url($atts['img2']); ?>" alt="Advertisement"/> <!-- NEW -->
+                    </a> <!-- NEW -->
+                </div> <!-- NEW -->   
+            <?php endif; ?> <!-- NEW -->
         </div>
     </div>
     
