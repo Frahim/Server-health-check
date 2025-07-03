@@ -63,7 +63,7 @@ function domain_tools_settings_page()
     $current_spf_adsense_publisher_id = $spf_adsense_options['publisher_id'] ?? '';
     $current_spf_adsense_ad_slot_id = $spf_adsense_options['ad_slot_id'] ?? '';
     // --- END NEW ADSNESE RETRIEVAL ---
-    ?>
+?>
 
     <div class="wrap">
         <h1>📦 Mail Server Tools – Settings</h1>
@@ -71,22 +71,64 @@ function domain_tools_settings_page()
         <h2 class="nav-tab-wrapper">
             <a href="#shortcodes" class="nav-tab nav-tab-active">Shortcodes</a>
             <a href="#styles" class="nav-tab">Styles</a>
-            <a href="#spf-adsense" class="nav-tab">SPF AdSense</a> </h2>
+            <a href="#spf-adsense" class="nav-tab">SPF AdSense</a>
+        </h2>
 
         <div id="shortcodes" class="tab-content" style="display: block;">
             <p>Use the following shortcodes to display DNS and IP utilities on your pages or posts.</p>
             <div class="domain-wrapper" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>🛡️ SPF Checker</h2><p>Displays the SPF record for a domain.</p><code>[spf_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>📨 MX Record Checker</h2><p>Displays the MX records for a domain.</p><code>[mx_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>🔒 DKIM Record Checker</h2><p>Displays the DKIM record for a domain (selector required).</p><code>[dkim_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>📧 SMTP Test</h2><p>Tests if the domain's SMTP server is reachable.</p><code>[smtp_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>🛑 DMARC Record</h2><p>Displays the DMARC record if available.</p><code>[dmarc_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>📡 A Record (IPv4)</h2><p>Fetches A records for a domain.</p><code>[a_record_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>🌐 TXT Records</h2><p>Displays all TXT records.</p><code>[txt_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>🔍 IP & Geo Lookup</h2><p>Geolocation and ISP data based on IP (with map).</p><code>[ip_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>🔐 SSL Certificate Checker</h2><p>Fetches SSL expiration and certificate info.</p><code>[ssl_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>📧 Email Deliverability Checker</h2><code>[email_deliverability_checker]</code></div>
-                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;"><h2>📧 Blacklist Check Tool</h2><code>[blacklist_checker]</code></div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>🛡️ SPF Checker</h2>
+                    <p>Displays the SPF record for a domain.</p><code>[spf_checker]</code>
+                     <p>[spf_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>📨 MX Record Checker</h2>
+                    <p>Displays the MX records for a domain.</p><code>[mx_checker]</code>                    
+                    <p>[mx_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>🔒 DKIM Record Checker</h2>
+                    <p>Displays the DKIM record for a domain (selector required).</p><code>[dkim_checker]</code>
+                    <p>[dkim_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>📧 SMTP Test</h2>
+                    <p>Tests if the domain's SMTP server is reachable.</p><code>[smtp_checker]</code>
+                    <p>[smtp_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>🛑 DMARC Record</h2>
+                    <p>Displays the DMARC record if available.</p><code>[dmarc_checker]</code>
+                    <p>[dmarc_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>📡 A Record (IPv4)</h2>
+                    <p>Fetches A records for a domain.</p><code>[a_record_checker]</code>
+                    <p>[a_record_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>🌐 TXT Records</h2>
+                    <p>Displays all TXT records.</p><code>[txt_checker]</code>
+                    <p>[txt_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>🔍 IP & Geo Lookup</h2>
+                    <p>Geolocation and ISP data based on IP (with map).</p><code>[ip_checker]</code>
+                    <p>[ip_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>🔐 SSL Certificate Checker</h2>
+                    <p>Fetches SSL expiration and certificate info.</p><code>[ssl_checker]</code>
+                    <p>[ssl_checker url="..." img=" ...." img2="..."]</p>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>📧 Email Deliverability Checker</h2><code>[email_deliverability_checker]</code>
+                </div>
+                <div class="domain-tool-box" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                    <h2>📧 Blacklist Check Tool</h2><code>[blacklist_checker]</code>
+                    <p>[blacklist_checker url="..." img=" ...." img2="..."]</p>
+                </div>
             </div>
         </div>
 
@@ -110,33 +152,8 @@ function domain_tools_settings_page()
                 </table>
                 <?php submit_button('Save Styles', 'primary', 'domain_tools_save_styles'); ?>
             </form>
-        </div>
-
-        <div id="spf-adsense" class="tab-content" style="display: none;">
-            <form method="post">
-                <?php wp_nonce_field('domain_tools_save_spf_adsense_nonce', 'domain_tools_spf_adsense_nonce_field'); ?>
-                <h2>📊 SPF Checker Google AdSense Settings</h2>
-                <p>Enter your Google AdSense Publisher ID and Ad Slot ID specifically for the <strong>SPF Checker</strong> tool's pop-up.</p>
-                <table class="form-table">
-                    <tr>
-                        <th scope="row"><label for="spf_adsense_publisher_id">AdSense Publisher ID</label></th>
-                        <td>
-                            <input type="text" id="spf_adsense_publisher_id" name="spf_adsense_publisher_id" value="<?php echo esc_attr($current_spf_adsense_publisher_id); ?>" class="regular-text" placeholder="e.g., ca-pub-1234567890123456">
-                            <p class="description">Your Google AdSense Publisher ID (starts with <code>ca-pub-</code>).</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="spf_adsense_ad_slot_id">AdSense Ad Slot ID</label></th>
-                        <td>
-                            <input type="text" id="spf_adsense_ad_slot_id" name="spf_adsense_ad_slot_id" value="<?php echo esc_attr($current_spf_adsense_ad_slot_id); ?>" class="regular-text" placeholder="e.g., 1234567890">
-                            <p class="description">The Ad Slot ID for your responsive display ad unit (10 digits).</p>
-                        </td>
-                    </tr>
-                </table>
-                <?php submit_button('Save SPF AdSense Settings', 'primary', 'domain_tools_save_spf_adsense'); ?>
-            </form>
-        </div>
-        </div>
+        </div>  
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -161,7 +178,7 @@ function domain_tools_settings_page()
             showTab(initialTab);
 
             navTabs.forEach(tab => {
-                tab.addEventListener('click', function (e) {
+                tab.addEventListener('click', function(e) {
                     e.preventDefault();
                     const tabId = this.getAttribute('href').substring(1); // Remove '#'
                     showTab(tabId);
